@@ -1,0 +1,93 @@
+/* Adelia structure and responsive layout; colours come from the selected theme. */
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body.adelia { overflow-wrap: anywhere; }
+.boardlist.adminbar { display: flex; justify-content: flex-end; align-items: center; flex-wrap: wrap; gap: 8px; padding: 6px 0; }
+.theme-picker { white-space: nowrap; font-size: 11px; }
+#switchStylesheet { max-width: 180px; }
+header .logo img { max-width: 100%; height: auto; }
+.postarea { margin: 1.5rem auto; }
+.postarea form { margin: 0; }
+.postarea table { max-width: 650px; width: auto; }
+.postarea th { vertical-align: top; }
+.postarea td { padding: 2px 4px; }
+.postarea textarea { min-width: 300px; max-width: 100%; resize: vertical; }
+.rules { font-size: 11px; }
+.rules ul { padding-left: 20px; line-height: 1.5; }
+#captchaimage { vertical-align: middle; }
+#delform { margin-bottom: 1em; }
+.thread { clear: both; }
+div.post.op { display: block; }
+div.post::after { content: ''; display: block; clear: both; }
+div.post.reply { max-width: calc(100% - 12px); }
+div.post.reply:has(.file) { min-width: min(650px, 94%); }
+.post .intro { line-height: 1.6; }
+.post .reflink a { margin: 0; text-decoration: none; color: inherit; }
+.post .body { white-space: normal; line-height: 1.5; }
+.post .file { max-width: 100%; }
+.post .fileinfo { overflow-wrap: anywhere; }
+.post-image { max-width: 100%; height: auto; object-fit: contain; }
+.file-expanded { float: left; max-width: 100%; margin: 5px 20px 10px 0; }
+.file-expanded img, .file-expanded video, .file-expanded iframe { max-width: 100% !important; min-width: 0 !important; min-height: 0 !important; }
+.aa { font-family: monospace; white-space: pre-wrap; }
+.omittedposts { display: inline-block; margin: 8px 20px; font-size: 11px; opacity: .8; }
+.userdelete { margin: 8px 0 8px auto; }
+.pages { clear: both; margin: 12px 0; }
+.pages:empty { display: none; }
+.pages form { margin: 0; }
+.footer { clear: both; text-align: center; margin: 2rem 0 1rem; font-size: 11px; }
+.footer p { line-height: 1.5; }
+.login { text-align: center; }
+.login input { margin: 4px; }
+.managebutton { margin: 4px; padding: 4px 8px; }
+.manage-page fieldset { max-width: 950px; margin: 1.5rem auto; }
+.manage-page table { max-width: 100%; }
+.floatpost { float: right; }
+.moderator { color: red; }
+#newreplies { margin: 8px 0; font-weight: bold; }
+div.post.hoverpost { z-index: 100; max-width: min(650px, 90vw); padding: 10px; border: 1px solid currentColor; box-shadow: 2px 3px 8px #0005; }
+div.post.hoverpost:not(.reply) { background-color: inherit; }
+div.post.hoverpost { position: fixed; margin: 0 !important; min-width: 0 !important; max-height: 80vh; overflow: hidden; pointer-events: none; text-align: left; }
+.theme-catalog .threads { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; margin: 20px 0; }
+.theme-catalog .thread { float: none !important; clear: none; width: 180px; max-width: 44vw; min-height: 120px; padding: 8px; text-align: center; overflow: hidden; }
+.theme-catalog .thread img { float: none; display: block; margin: auto; width: auto; height: auto; max-width: 100%; max-height: 150px; object-fit: contain; }
+.theme-catalog .replies { margin: 8px 0; font-size: 11px; }
+.catalog-subject { white-space: normal; overflow-wrap: anywhere; }
+@media (max-width: 640px) {
+ body.adelia { margin: 0; padding: 0 6px; }
+ h1.logo { font-size: 24px; }
+ .postarea { margin: 1rem 0; }
+ .postarea table, .postarea tbody, .postarea tr, .postarea th, .postarea td { display: block; width: 100%; max-width: 100%; }
+ .postarea th { padding: 4px 7px; }
+ .postarea td { padding: 5px 0 9px; }
+ .postarea input:not([type=checkbox]):not([type=hidden]) { max-width: 100%; font-size: 16px; }
+ .postarea input[type=file] { width: 100%; font-size: 13px; }
+ .postarea textarea { min-width: 0; width: 100%; font-size: 16px; }
+ div.post.op { margin-right: 0; }
+ div.post.reply { margin-left: 5px !important; padding: 7px !important; max-width: calc(100% - 5px); }
+ .post .intro { font-size: 11px; }
+ .post .fileinfo { margin-left: 0; padding-left: 0; font-size: 11px; }
+ .post .file { float: none !important; }
+ .post .file .post-image { float: none !important; margin: 5px 0; max-width: 180px; max-height: 180px; }
+ .post .body { clear: both; margin: 8px 0 !important; }
+ .file-expanded { float: none; margin-right: 0; }
+ .userdelete { max-width: 100%; }
+ .theme-catalog .threads { gap: 10px; }
+ .theme-catalog .thread { width: 44vw; }
+}
+
+.moderation-layout { display: grid; grid-template-columns: minmax(0, 3fr) minmax(210px, 2fr); gap: 20px; }
+.moderation-preview, .moderation-actions, .edit-preview { min-width: 0; overflow-wrap: anywhere; }
+.moderation-actions form { margin: 8px 0; }
+.moderation-actions .managebutton { display: inline-block; }
+.post-editor form { max-width: 760px; margin: 20px auto 0; }
+.post-editor label { display: block; margin: 12px 0 5px; }
+.post-editor input[type=text], .post-editor textarea { width: 100%; max-width: 100%; box-sizing: border-box; }
+.post-editor input[type=file] { max-width: 100%; }
+.post-editor textarea { min-height: 200px; resize: vertical; }
+.post-editor .edit-preview { padding-bottom: 12px; border-bottom: 1px solid currentColor; }
+@media (max-width: 640px) {
+ .moderation-layout { grid-template-columns: minmax(0, 1fr); }
+ .manage-page fieldset { min-width: 0; padding: 10px; }
+ .post-editor input[type=text], .post-editor textarea { font-size: 16px; }
+}

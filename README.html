@@ -1,0 +1,682 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Adelia setup, moderation, secure tripcodes, SQLite and flat-file storage. A complete offline user guide.">
+<meta name="color-scheme" content="light">
+<title>Adelia — User guide</title>
+<style>
+:root{--paper:#fffefb;--canvas:#f4f3ed;--ink:#263935;--muted:#586961;--accent:#315e51;--line:#d9e0d6;--tint:#eaf0e7;--gold:#a47136;--sidebar:286px}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:30px}body{margin:0;background:var(--canvas);color:var(--ink);font:16px/1.7 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}a{color:var(--accent);text-decoration-thickness:1px;text-underline-offset:3px}a:hover{color:#162f26}a:focus-visible,summary:focus-visible,[tabindex="0"]:focus-visible{outline:3px solid #b78845;outline-offset:4px}p,li{overflow-wrap:anywhere}p{margin:0 0 1.15em}strong{font-weight:650}h1,h2,h3{line-height:1.22;text-wrap:balance}h1{font-family:Georgia,serif;font-size:clamp(3.3rem,7vw,5.6rem);letter-spacing:-.05em;margin:10px 0 22px;font-weight:400}h2{font-size:1.6rem;letter-spacing:-.025em;margin:2.9rem 0 1rem;padding-top:1.6rem;border-top:1px solid var(--line)}h3{font-size:1.19rem;margin:2rem 0 .9rem}h1:focus,h2:focus,h3:focus{outline:none}ul,ol{padding-left:1.55rem;margin:0 0 1.3rem}li{padding-left:.12rem;margin:.45rem 0}code{background:#edf0e9;border-radius:4px;padding:.14em .32em;font: .87em/1.6 Consolas,"Cascadia Mono",monospace;overflow-wrap:anywhere}pre{background:#243a33;color:#edf3e8;padding:19px 22px;border-radius:10px;overflow-x:auto;font-size:.91rem;line-height:1.7;margin:1.4rem 0}pre code{padding:0;background:none;color:inherit;overflow-wrap:normal;white-space:pre;font-size:inherit}.table-scroll{overflow:auto;max-width:100%;margin:1.5rem 0;border:1px solid var(--line);border-radius:9px}table{border-collapse:collapse;width:100%;font-size:.93rem}th,td{text-align:left;vertical-align:top;padding:13px 16px;border-bottom:1px solid var(--line)}th{background:var(--tint);font-weight:650}tr:last-child td{border-bottom:0}td:first-child{min-width:200px}td:last-child{min-width:260px}
+.skip{position:fixed;left:20px;top:-70px;z-index:9;padding:10px 20px;background:var(--ink);color:white}.skip:focus{top:12px}.shell{max-width:1440px;margin:auto;display:grid;grid-template-columns:var(--sidebar) minmax(0,1fr);min-height:100vh}.sidebar{border-right:1px solid var(--line);padding:34px 26px;position:sticky;top:0;height:100vh;overflow-y:auto}.brand{display:flex;align-items:center;gap:12px;font-family:Georgia,serif;font-size:1.7rem;text-decoration:none}.mark{display:grid;place-items:center;width:40px;height:40px;background:var(--accent);color:white;border-radius:11px;font-size:1.65rem}.edition{font-size:.74rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin:10px 0 27px}.sidebar summary{font-weight:650;cursor:pointer;font-size:.88rem;margin-bottom:10px}.sidebar ol{list-style:none;margin:0;padding:0}.sidebar li{margin:0;padding:0}.sidebar li a{display:flex;gap:9px;align-items:baseline;text-decoration:none;color:var(--muted);font-size:.82rem;line-height:1.5;padding:7px 0}.sidebar li a span{font-size:.68rem;color:#7b897e;min-width:17px;font-variant-numeric:tabular-nums}.sidebar li a:hover{color:var(--accent);text-decoration:underline}.nav-divider{border-top:1px solid var(--line);margin-top:16px!important;padding-top:12px!important}.side-note{font-size:.77rem;color:var(--muted);margin:26px 0 0;line-height:1.6}.main{min-width:0;background:var(--paper);padding:46px clamp(24px,5vw,78px) 50px}.eyebrow{font-size:.75rem;text-transform:uppercase;letter-spacing:.14em;font-weight:650;color:var(--accent);display:flex;gap:10px;align-items:center}.eyebrow:before{content:"";width:28px;height:1px;background:var(--gold)}.hero{max-width:820px}.hero>p:first-of-type{font-size:1.2rem;line-height:1.65;max-width:720px}.hero>p:not(:first-of-type){font-size:.89rem;color:var(--muted)}.facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:27px 0 10px}.fact{border:1px solid var(--line);border-radius:10px;padding:17px 18px;background:#f9faf5}.fact span{font-size:.69rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:5px}.fact strong{font-size:.95rem;display:block}.article{max-width:820px}.appendix-label{font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}.appendix{margin-top:48px;border-top:3px solid var(--accent);padding-top:25px}.appendix>h2{border:0;padding:0;margin:8px 0 14px}.appendix h2{font-size:1.65rem}.appendix h3{font-size:1.18rem}.source{font-size:.82rem;color:var(--muted)}.appendix details{margin-top:18px}.appendix summary{cursor:pointer;padding:14px 18px;border:1px solid var(--line);background:var(--tint);border-radius:8px;font-weight:650}.reference-content{padding:0 4px}.reference-content>h2:first-child{font-size:1.4rem;border:0;margin-top:24px}.license-text{background:#f1f3ed;color:var(--ink);font-size:.8rem;white-space:pre-wrap;overflow-wrap:anywhere}.footer{border-top:1px solid var(--line);padding-top:22px;margin-top:50px;color:var(--muted);font-size:.8rem;display:flex;gap:20px;justify-content:space-between}.footer a{white-space:nowrap}
+@media(min-width:1441px){.shell{border-left:1px solid var(--line);border-right:1px solid var(--line)}}
+@media(max-width:900px){:root{--sidebar:230px}.sidebar{padding:27px 18px}.main{padding:36px 30px}.facts{gap:8px}.fact{padding:13px 11px}.fact strong{font-size:.85rem}}
+@media(max-width:700px){.shell{display:block}.sidebar{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:17px 22px}.brand{font-size:1.35rem}.mark{height:33px;width:33px;font-size:1.4rem}.edition{margin:7px 0 12px;font-size:.65rem}.sidebar details{margin-top:10px}.sidebar details:not([open]) summary{margin-bottom:0}.sidebar ol{columns:2;column-gap:22px}.sidebar li{break-inside:avoid}.sidebar li a{font-size:.77rem}.side-note{display:none}.main{padding:30px 22px}.hero>p:first-of-type{font-size:1.08rem}h2{font-size:1.42rem}.facts{grid-template-columns:1fr}.fact{display:flex;justify-content:space-between;gap:16px;align-items:baseline;padding:10px 14px}.fact span{margin:0}.fact strong{font-size:.87rem}pre{padding:15px;font-size:.78rem}.footer{display:block}.footer a{display:inline-block;margin-top:10px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media print{@page{margin:18mm}body{background:white;color:#111;font-size:10pt}.shell{display:block;max-width:none}.sidebar,.skip,.facts,.footer a{display:none}.main{padding:0}.hero,.article{max-width:none}h1{font-size:38pt}h2{font-size:17pt;break-after:avoid}h3{break-after:avoid}p,li{orphans:3;widows:3}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f3f3f3;color:#111;break-inside:avoid}pre code{white-space:pre-wrap}a{color:inherit}.table-scroll{overflow:visible}table{font-size:9pt}th,td{padding:7px}td:first-child,td:last-child{min-width:0}.appendix{break-before:page}.appendix details::details-content{content-visibility:visible;height:auto}.appendix summary{display:none}.reference-content{display:block}.license-text{font-size:8pt}.footer{margin-top:24px}}
+</style>
+</head>
+<body>
+<a class="skip" href="#content">Skip to the guide</a>
+<div class="shell">
+<aside class="sidebar" aria-label="Guide navigation">
+<a class="brand" href="#adelia"><span class="mark" aria-hidden="true">a</span>Adelia</a>
+<p class="edition">User guide · September 2026</p>
+<nav aria-label="Contents"><details id="contents" open><summary>In this guide</summary><ol><li><a href="#repository-contents-and-first-launch"><span>01</span>Repository contents and first launch</a></li>
+<li><a href="#start-the-desktop-board"><span>02</span>Start the Desktop board</a></li>
+<li><a href="#requirements-and-fresh-setup"><span>03</span>Requirements and fresh setup</a></li>
+<li><a href="#settings"><span>04</span>Settings</a></li>
+<li><a href="#accounts-and-passwords"><span>05</span>Accounts and passwords</a></li>
+<li><a href="#posting-identities-and-secure-tripcodes"><span>06</span>Posting identities and secure tripcodes</a></li>
+<li><a href="#posting-themes-and-moderation"><span>07</span>Posting, themes and moderation</a></li>
+<li><a href="#sqlite-3-and-flat-file-storage"><span>08</span>SQLite 3 and flat-file storage</a></li>
+<li><a href="#upgrading-an-older-adelia-installation"><span>09</span>Upgrading an older Adelia installation</a></li>
+<li><a href="#website-hosting"><span>10</span>Website hosting</a></li>
+<li><a href="#privacy-and-security-boundaries"><span>11</span>Privacy and security boundaries</a></li>
+<li><a href="#development-and-verification"><span>12</span>Development and verification</a></li>
+<li><a href="#credits-and-licenses"><span>13</span>Credits and licenses</a></li>
+<li class="nav-divider"><a href="#storage-reference">Storage reference</a></li>
+<li><a href="#theme-reference">Theme reference</a></li>
+<li><a href="#ai-reference">AI contributor guidance</a></li>
+<li><a href="#licenses">License texts</a></li>
+</ol></details></nav>
+<p class="side-note">A self-contained guide.<br>No server or internet required.<br>Print with Ctrl+P.</p>
+</aside>
+<main class="main" id="content" tabindex="-1">
+<header class="hero"><div class="eyebrow">Small board. Simple setup.</div><h1 id="adelia" tabindex="-1">Adelia</h1>
+<p>A lightweight imageboard with selectable themes, native JavaScript, a PHP backend, and static board, thread and catalog pages. Storage is <strong>SQLite 3 or transactional JSON flat-file only</strong>. No Composer, Twig or jQuery is required.</p>
+<p>Documentation checked against the application on <strong>7 September 2026</strong>. The verified runtime is <a href="https://www.php.net/releases/8_5_10.php">PHP 8.5.10</a>, 64 bit. Development targets the <strong>latest stable PHP release</strong>, with no requirement to support older PHP versions. The current startup check requires PHP 8.5 or newer; this is a minimum check, not a promise of compatibility with every future release. Check <a href="https://www.php.net/downloads.php">PHP downloads</a> before updating the runtime.</p>
+<p>Open <strong>README.html</strong> directly in a browser for the offline guide, including the storage and theme references. It is documentation, separate from the generated board page <code>index.html</code>.</p>
+</header>
+<div class="facts" aria-label="Project at a glance">
+<div class="fact"><span>PHP policy</span><strong>Latest stable release</strong></div>
+<div class="fact"><span>Storage</span><strong>SQLite 3 / Flat-file</strong></div>
+<div class="fact"><span>Frontend</span><strong>8 themes · Native JS</strong></div>
+</div>
+<article class="article" aria-label="Adelia user guide"><h2 id="repository-contents-and-first-launch" tabindex="-1">Repository contents and first launch</h2>
+<p>This repository contains the complete application source, eight selected themes and their required images, tests, launchers, licenses and both README editions. Hidden development files and the <code>.gitignore</code> files in <code>src</code>, <code>thumb</code> and <code>res</code> are included so a clone retains those directories.</p>
+<p>The tracked <code>settings.php</code> contains the documented installation options with a <strong>blank <code>tripseed</code></strong>. Copy or deploy the source, generate a private key with <code>php -r &quot;echo bin2hex(random_bytes(32));&quot;</code>, and set it in the deployed <code>settings.php</code> before the first launch. Startup refuses a blank key. Keep an established board&#39;s key when upgrading unless you are intentionally rotating an exposed key; a rotation changes future tripcodes but does not rewrite saved posts.</p>
+<p>Do not commit a populated private key or access key to this public repository. Git tracks <code>settings.php</code>, so <code>.gitignore</code> cannot hide changes to it. Keep your configured deployment copy separate from the source checkout. The desktop board&#39;s private database, account hashes, uploaded attachments, generated HTML/JSON, locks and backups are intentionally excluded. The application builds public pages on first launch from its own storage; a fresh clone starts a new board, not a copy of an existing board&#39;s records.</p>
+<h2 id="start-the-desktop-board" tabindex="-1">Start the Desktop board</h2>
+<p>After configuring the private key as described above, double-click <strong>Start Adelia.bat</strong>. Keep it beside <code>imgboard.php</code>, or beside a subfolder named <code>Adelia</code>. The launcher locates the board relative to itself, so the folder can be moved. It uses <code>C:\php\php.exe</code>, rebuilds the static pages, starts the local server, and opens <code>http://127.0.0.1:8080/</code>. Keep the console open while using the board; close it or press Ctrl+C to stop.</p>
+<p>The distributed configuration uses SQLite, allows text-only threads, and has all four CAPTCHA settings disabled. Edit the commented <code>settings.php</code> directly to change these choices. The initial management login is <strong>admin / password</strong>; the first login requires a new password. Saved accounts retain their credentials on later starts and upgrades.</p>
+<p>The local server binds to loopback. <code>local-router.php</code> permits public board pages and assets while blocking application code, configuration, storage and executable uploads. Open this documentation from the filesystem; the local router does not expose <code>README.html</code>.</p>
+<h2 id="requirements-and-fresh-setup" tabindex="-1">Requirements and fresh setup</h2>
+<ul>
+<li>A 64-bit, current stable PHP runtime. The present code requires PHP 8.5+ with GD/FreeType, DOM, mbstring, fileinfo and curl.</li>
+<li>SQLite needs PDO and <code>pdo_sqlite</code>. Flat-file storage needs no database extension or separate server.</li>
+<li>PHP needs write access to the board directory, its storage location, and <code>src</code>, <code>thumb</code> and <code>res</code>.</li>
+<li>A browser with native JavaScript module support; JavaScript supplies form tokens on static pages and interactive controls.</li>
+</ul>
+<p>Run commands from the board directory. On this Desktop, PHP is installed at <code>C:\php\php.exe</code>; use that full path if <code>php</code> is not on PATH.</p>
+<ol>
+<li>Open <code>settings.php</code> and follow the comments beside each option. This is the application configuration file. Preserve an existing board&#39;s settings and secrets when upgrading.</li>
+<li>For a new board only, set <code>tripseed</code> to a random private value. Keep an established board&#39;s key unchanged. Generate a new key with <code>php -r &quot;echo bin2hex(random_bytes(32));&quot;</code>.</li>
+<li>Choose <code>sqlite</code> with <code>.adelia.db</code>, or <code>flatfile</code> with a hidden JSON filename such as <code>.adelia.json</code>.</li>
+<li>For a new empty flat-file store, run <code>php bin/storage.php init</code>. SQLite creates its schema automatically.</li>
+<li>Run <code>php imgboard.php</code>, or start the Desktop launcher, to create the initial account and static pages.</li>
+<li>Open <strong>Manage</strong>, sign in with <strong>admin / password</strong>, and change the password before using management. Use HTTPS for a public deployment so passwords and tripcode secrets are protected in transit.</li>
+</ol>
+<h2 id="settings" tabindex="-1">Settings</h2>
+<p><code>settings.php</code> returns an array loaded and validated by <code>Adelia\Config</code>. Its comments explain every option, accepted choices, units, disabled values and external-tool requirements. Use native PHP booleans (<code>true</code>/<code>false</code>), integers, strings and arrays. Keep every required key; unknown or retired keys are rejected. After changing visible options, use <strong>Manage → Rebuild All</strong> or <code>php bin/maintenance.php</code> to refresh static pages.</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Reference table"><table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Purpose and current configuration</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>board</code>, <code>boarddesc</code>, <code>boardtitle</code></td>
+<td>Alphanumeric board identifier, heading and browser title</td>
+</tr>
+<tr>
+<td><code>timezone</code></td>
+<td>PHP timezone identifier; <code>UTC</code></td>
+</tr>
+<tr>
+<td><code>captcha</code>, <code>replycaptcha</code>, <code>managecaptcha</code>, <code>reportcaptcha</code></td>
+<td><code>&#39;&#39;</code> disables each challenge; <code>simple</code> enables it. Currently all disabled</td>
+</tr>
+<tr>
+<td><code>report</code></td>
+<td>Reporting; <code>false</code></td>
+</tr>
+<tr>
+<td><code>dbdriver</code>, <code>dbpath</code></td>
+<td><code>sqlite</code> and <code>.adelia.db</code>; alternatively <code>flatfile</code> and <code>.adelia.json</code></td>
+</tr>
+<tr>
+<td><code>defaultstyle</code></td>
+<td>Theme filename without <code>.css</code>; <code>futaba-light</code></td>
+</tr>
+<tr>
+<td><code>maxkb</code>, <code>maxkbdesc</code></td>
+<td>Upload size in KiB and its displayed description; <code>2048</code> and <code>2 MB</code></td>
+</tr>
+<tr>
+<td><code>uploads</code>, <code>embeds</code></td>
+<td>Detected MIME type to saved extension/preset thumbnail, and provider name to oEmbed endpoint; currently JPEG, PNG and GIF uploads</td>
+</tr>
+<tr>
+<td><code>thumbnail</code></td>
+<td>Currently <code>gd</code>; alternatives are <code>imagemagick</code> and <code>ffmpeg</code>, with their external programs installed</td>
+</tr>
+<tr>
+<td><code>maxwop</code>, <code>maxhop</code>, <code>maxw</code>, <code>maxh</code></td>
+<td>Opening-post and reply thumbnail dimensions</td>
+</tr>
+<tr>
+<td><code>threadsperpage</code>, <code>maxthreads</code>, <code>maxreplies</code></td>
+<td>Threads per page, automatic thread retention, and reply-count limit for bumping (not a reply lock)</td>
+</tr>
+<tr>
+<td><code>uploadviaurl</code></td>
+<td>Remote file downloads; <code>false</code></td>
+</tr>
+<tr>
+<td><code>nofileok</code></td>
+<td>Allow opening posts without an attachment; currently <code>true</code></td>
+</tr>
+</tbody></table></div>
+<p><code>updatebumped</code> and the <code>stylesheets</code> array are still required configuration keys but currently have no effect. Themes are discovered from CSS files automatically. The inline comments identify these retained fields explicitly.</p>
+<p>Disabling <code>catalog</code> or <code>json</code> removes the corresponding generated files on the next rebuild. Run <strong>Rebuild All</strong> or <code>php bin/maintenance.php</code> after changing these settings; switching JSON exports off does not disable dynamic reply refresh.</p>
+<p>Only the simple CAPTCHA is supported, through <code>inc/captcha.php</code>. There is no reCAPTCHA or translation-package dependency. Keep <code>tripseed</code> private and unchanged after setup: it determines posting identities and editor conflict tokens.</p>
+<h2 id="accounts-and-passwords" tabindex="-1">Accounts and passwords</h2>
+<p>When the accounts table is empty, Adelia creates one super-administrator named <code>admin</code> with the initial password <code>password</code>. The password is stored using PHP password hashing and verified against the saved account. The initial pair is not an override for a changed password, and ordinary upgrades do not reset accounts. There are no <code>adminpass</code> or <code>modpass</code> settings.</p>
+<p><strong>Manage → Change Password</strong> requires the current password, a new password and confirmation. New account passwords must have 12–64 characters and at most 72 UTF-8 bytes, avoiding truncation by the current bcrypt implementation. The first password change is required before other management actions become available.</p>
+<p>After a successful database commit, the current session is rotated and other authenticated sessions are invalidated. A failed save preserves the previous credential and session. The super-administrator can rename logins and manage accounts under <strong>Accounts</strong>. Usernames must be nonblank, contain no control characters and have at most 64 characters. The last super-administrator cannot be deleted, disabled or demoted. Moderators can change their own passwords without account-administration privileges.</p>
+<h2 id="posting-identities-and-secure-tripcodes" tabindex="-1">Posting identities and secure tripcodes</h2>
+<p>Enter <code>Your name##your-private-passphrase</code> in the name field for a secure tripcode. The displayed identity is your name followed by <code>!!</code> and a 22-character identifier. It uses 128 bits of HMAC-SHA-256 with the board&#39;s private <code>tripseed</code> and a separate secure-tripcode context. The raw passphrase is not saved in post fields or published in HTML/JSON. Use a long private passphrase; a tripcode is a posting identity, not a moderator login.</p>
+<p><code>Name#secret</code> and <code>Name!secret</code> retain the earlier Adelia 12-character keyed HMAC identities. The <code>##</code> form is explicitly the longer mode; it differs from the old behavior of treating the second hash as part of a single-hash secret. Saved posts remain unchanged. Different board keys produce different tripcodes. Original TinyIB crypt tripcodes and MD5/crypt deletion-password formats are not supported.</p>
+<h2 id="posting-themes-and-moderation" tabindex="-1">Posting, themes and moderation</h2>
+<p>The eight retained themes—<strong>Yotsuba, Yotsuba B, Dark, Futaba Light, Jungle, Miku, Rugby and Sharp</strong>—are available through <strong>Style</strong> on the board, threads, catalog and management pages. The browser remembers the selection. Futaba Light is the default for new visitors; a saved choice that was removed falls back to this default. Unused themes, images, fonts and legacy stylesheet folders have been removed. Themes are discovered from <code>stylesheets/*.css</code>; layout adjustments belong in <code>stylesheets/shared/adelia.css</code>. The shared file is outside the top-level theme list, so the Style menu still has eight choices. See <a href="#theme-reference">THEMES.md</a> for customization.</p>
+<p>Native JavaScript handles quote previews, image/GIF expansion, reply refresh, backlinks, CAPTCHA refresh and theme preferences. MP4/WebM playback is supported by the frontend, but accepting and processing video also requires suitable upload configuration and external tools. The current upload allowlist is JPEG, PNG and GIF. Optional video processing and remote providers have not been tested end to end.</p>
+<p>Public deletion accepts multiple selected posts and validates all deletion passwords before committing any deletion. New deletion passwords accept at most 72 UTF-8 bytes and no NUL characters.</p>
+<p>Open <strong>Manage → Moderate Post</strong>, enter a post number, and choose <strong>Edit post / change image</strong>. Administrators and moderators can edit the subject and message of a thread or reply, replace its attachment, or remove an attachment when the post remains valid. The author, tripcode, timestamp and deletion password are preserved. Text uses the same escaped quote, link and spoiler formatting as public posts; staff posts do not accept raw HTML.</p>
+<p><strong>Pin thread / Unpin thread</strong> changes thread ordering. <strong>Lock thread / Unlock thread</strong> controls public replies. These actions can be reached from an opening post or reply and affect the containing thread. Saving rebuilds the thread, board index and catalog; refresh an already-open page to see edits. A stale editor is rejected if another change has been saved in the meantime. Use <strong>Manage → Rebuild All</strong> after changing templates or themes.</p>
+<h2 id="sqlite-3-and-flat-file-storage" tabindex="-1">SQLite 3 and flat-file storage</h2>
+<p>Only <code>sqlite</code> and <code>flatfile</code> are supported. SQLite 3 is the default. MySQL, MariaDB and PostgreSQL are not part of this application; no database server credentials are needed.</p>
+<p>The flat-file system is <strong>attempting to be the best it can be for a lightweight board</strong>: reliable, consistent, recoverable and fully usable through moderation. This is an engineering goal, not a guarantee of perfect durability. Its transactional JSON bundle uses a checksummed commit record and recovery journal. Posting and moderation commit related record changes together, then durable jobs finish static-page rebuilding and unreferenced-media cleanup.</p>
+<p>For a new empty flat-file board, select <code>flatfile</code> and <code>.adelia.json</code>, run <code>php bin/storage.php init</code>, then run <code>php imgboard.php</code>. Missing or inconsistent flat-file storage fails closed instead of silently starting an empty board. SQLite&#39;s schema initialization is automatic.</p>
+<p>To convert an existing board, stop serving it and back up the whole folder, including hidden files. Run <code>php bin/convert-storage.php flatfile .adelia.json</code>. The converter verifies the new destination and preserves the source, settings, media and ID counters; it refuses to overwrite an existing destination. Select the new driver and path in settings, run <code>php bin/maintenance.php</code>, then restart. Conversion back to SQLite is also available. Never select an outdated source after accepting new posts.</p>
+<p>Keep <code>.adelia.json</code>, <code>.adelia.json.head</code> and <code>.adelia.json.journal</code> together, along with the board&#39;s other private state. Do not hand-edit them. Useful commands are:</p>
+<pre><code class="language-powershell">C:\php\php.exe bin/storage.php check
+C:\php\php.exe bin/storage.php repair
+C:\php\php.exe bin/maintenance.php
+</code></pre>
+<p><code>check</code> validates committed storage. <code>repair</code> restores the main flat-file snapshot from an exactly matching committed journal; it cannot invent a missing commit record. <code>maintenance.php</code> rebuilds public pages and retries cleanup.</p>
+<p>Use a local filesystem with working locks and one server. The flat-file record payload limit is 16 MiB, excluding media, and mutations replace complete snapshots. SQLite is preferable as records or activity grow. Recovery copies are not historical backups. Windows filesystem and device power-loss behavior remain limits; process-crash tests cannot prove survival of every hardware failure. Read <a href="#storage-reference">STORAGE.md</a> before conversion, backup or recovery.</p>
+<h2 id="upgrading-an-older-adelia-installation" tabindex="-1">Upgrading an older Adelia installation</h2>
+<p>Stop serving the board and make a private backup before migrations. Preserve settings, secrets, media and records. Older-PHP compatibility is not required, but an upgrade must not discard user data.</p>
+<p>Remove retired keys from an older <code>settings.php</code>: <code>adminpass</code>, <code>modpass</code>, <code>banmessage</code>, <code>cloudflare</code>, <code>dbbans</code>, <code>dbhost</code>, <code>dbport</code>, <code>dbusername</code>, <code>dbpassword</code>, <code>dbname</code> and <code>dbdsn</code>. Keep the supported settings and the existing <code>tripseed</code>.</p>
+<p>For an earlier Adelia SQLite schema, run <code>php bin/upgrade-moderation.php</code> from the CLI before serving the updated code. It adds editable source fields, removes old IP columns and the retired ban table, and cleans identifying ban records from the moderation log. If the old ban table had a custom name, pass its name as the first argument. The command is repeatable; fresh databases already have the current schema.</p>
+<p>For the previous Adelia version 1 JSON store, select its existing path and run <code>php bin/storage.php upgrade</code>. The upgrade preserves a private <code>.legacy</code> copy. It does not import original TinyIB serialized/TSV flat files. Run storage checks and maintenance after migration, then verify the board before reopening it.</p>
+<h2 id="website-hosting" tabindex="-1">Website hosting</h2>
+<p>Adelia is a PHP website application; it does not require Windows or a particular web server. Apache and nginx can serve it with the required PHP runtime and extensions. The Windows BAT file and <code>local-router.php</code> are for local development. Hosted sites need their own routing and access controls. No production <code>nginx.conf</code> or <code>.htaccess</code> is bundled.</p>
+<h3 id="before-making-a-board-public" tabindex="-1">Before making a board public</h3>
+<ol>
+<li>Set up HTTPS, create the board privately, and replace <strong>admin / password</strong> before allowing public access. Use a unique administrator passphrase. Keep PHP, the web server and optional media tools patched. Protect management at the hosting/edge layer if practical; Adelia does not implement a global login-attempt limiter.</li>
+<li>Use a dedicated site account and local filesystem. Keep database bundles, PHP sessions, logs and backups outside the document root where hosting permits. <code>dbpath</code> accepts an absolute path; move an existing store only while the board is stopped, preserving its complete bundle and checking the result before restarting. Do not point an established board at an empty or outdated store.</li>
+<li>Give PHP only the access it needs. Code and settings should belong to the deployment account; generated pages, media and storage need write access. <strong>The current layout also requires the board&#39;s root directory to be writable for generated pages and private lock/upload state.</strong> Making individual PHP files read-only does not prevent a compromised process from replacing files in a writable parent directory. Isolate the site from other sites and system files; do not use world-writable permissions. A stronger separation of generated pages and code would need a layout change.</li>
+<li>Allow public access only to generated board pages, approved asset paths and the two PHP entry points. Block settings, application code, maintenance commands, tests, database sidecars, dotfiles, lock files, temporary files, editor backups and documentation. Disable directory listings and symlink access. Store backups outside the website even when a deny rule exists. See <a href="https://www.php.net/manual/en/security.filesystem.php">PHP filesystem security</a>.</li>
+<li>Keep unused integrations disabled. <code>uploadviaurl = false</code> disables general remote file uploads; <code>embeds = []</code> disables new provider embeds. Existing saved embeds remain recognizable after providers are disabled. Remote requests accept only public Internet addresses on standard HTTP/HTTPS ports, pin validated DNS results, verify TLS, reject redirects and limit response size/time. Network egress restrictions provide another layer of protection. Provider availability and arbitrary external integrations still need separate testing.</li>
+<li>Align upload limits in PHP, the web server and the edge/CDN. The example below supports the default 2 MiB attachment plus form overhead. Limit request rates/connections at the server or edge according to expected traffic. Expensive image processing, password verification and remote requests consume resources; dynamic requests also share a board lock. Browser-session cooldowns are not protection against a determined flood.</li>
+</ol>
+<p>Adelia does not record poster IP addresses. Server, hosting and Cloudflare logging/rate limits are separate policies. Avoid logging request bodies or cookies: they can contain passwords and tripcode secrets. Static uploads are public files, not private or access-controlled storage; knowing an attachment URL can make it accessible even while its post is awaiting approval.</p>
+<h3 id="php-and-https-configuration" tabindex="-1">PHP and HTTPS configuration</h3>
+<p>The following is an example <strong>site PHP configuration</strong>, not an application settings array. Replace the private paths and use a session directory writable only by the site&#39;s PHP account. Keep the required extensions enabled. Match larger upload allowances to <code>maxkb</code>, image dimensions and available memory.</p>
+<pre><code class="language-ini">expose_php = Off
+display_errors = Off
+display_startup_errors = Off
+log_errors = On
+error_log = /srv/adelia-private/php-error.log
+upload_tmp_dir = /srv/adelia-private/uploads
+session.save_path = /srv/adelia-private/sessions
+cgi.fix_pathinfo = 0
+upload_max_filesize = 2M
+post_max_size = 3M
+max_file_uploads = 1
+memory_limit = 256M
+max_execution_time = 30
+</code></pre>
+<p>Create those directories privately before starting PHP. On Linux, use a dedicated PHP-FPM pool, a small <code>pm.max_children</code> appropriate to memory/traffic, a bounded <code>request_terminate_timeout</code>, and <code>security.limit_extensions = .php</code>. Bind FastCGI to a private Unix socket or loopback; never expose port 9000 to the Internet. Adapt the examples if the host supplies a Unix socket. See the <a href="https://www.php.net/manual/en/install.fpm.configuration.php">PHP-FPM configuration reference</a>.</p>
+<p>Use HTTPS for posting as well as management: the name field can contain a tripcode passphrase. Adelia sets HttpOnly and SameSite=Lax session cookies, uses cookie-only strict sessions, and marks cookies Secure when PHP receives <code>HTTPS=on</code>. When TLS terminates at a proxy/CDN, configure that value from the <strong>trusted proxy connection</strong>, and prevent direct untrusted access to the backend. Do not blindly copy a visitor-supplied forwarding header into it.</p>
+<p>Do not cache <code>imgboard.php</code> responses, including token, management and preview requests. They send <code>Cache-Control: private, no-store</code>. Make the CDN respect this and disable any &quot;cache everything&quot; rule for PHP. Generated HTML/JSON should be revalidated after edits and deletions; purge any existing CDN cache when changing these rules. Media and theme assets may have separate caching policies.</p>
+<h3 id="nginx-example" tabindex="-1">nginx example</h3>
+<p>Put these directives inside the site&#39;s existing HTTPS <code>server</code> block, with its domain and certificate already configured. This example serves a board at the domain root with the default <code>index.html</code> name. Change <code>/srv/adelia</code> and the FastCGI endpoint for the host. Subdirectory installations, renamed index files, added media types and custom external assets require corresponding rule changes.</p>
+<pre><code class="language-nginx">root /srv/adelia;
+index index.html;
+autoindex off;
+disable_symlinks on;
+client_max_body_size 3m;
+
+# nginx supplies these consistently for both PHP and static responses.
+fastcgi_hide_header X-Content-Type-Options;
+fastcgi_hide_header Referrer-Policy;
+
+add_header X-Content-Type-Options &quot;nosniff&quot; always;
+add_header Referrer-Policy &quot;same-origin&quot; always;
+add_header X-Frame-Options &quot;DENY&quot; always;
+add_header Content-Security-Policy &quot;default-src &#39;self&#39;; script-src &#39;self&#39;; style-src &#39;self&#39; &#39;unsafe-inline&#39;; img-src &#39;self&#39; data:; font-src &#39;self&#39; data:; media-src &#39;self&#39;; connect-src &#39;self&#39;; frame-src https://www.youtube.com https://youtube.com https://www.youtube-nocookie.com https://youtube-nocookie.com https://player.vimeo.com https://w.soundcloud.com; object-src &#39;none&#39;; base-uri &#39;self&#39;; form-action &#39;self&#39;; frame-ancestors &#39;none&#39;&quot; always;
+
+location = /imgboard.php {
+    include fastcgi_params;
+    fastcgi_param SCRIPT_FILENAME $document_root/imgboard.php;
+    fastcgi_param HTTPS $https if_not_empty;
+    fastcgi_param HTTP_PROXY &quot;&quot;;
+    fastcgi_pass 127.0.0.1:9000;
+    fastcgi_cache off;
+}
+location = /inc/captcha.php {
+    include fastcgi_params;
+    fastcgi_param SCRIPT_FILENAME $document_root/inc/captcha.php;
+    fastcgi_param HTTPS $https if_not_empty;
+    fastcgi_param HTTP_PROXY &quot;&quot;;
+    fastcgi_pass 127.0.0.1:9000;
+    fastcgi_cache off;
+}
+
+# Exact PHP locations above take precedence; all other script paths are denied.
+# Keep these denial expressions before the public-asset expressions.
+location ~ &quot;(^|/)\.&quot; { return 404; }
+location ~* &quot;\.(?:php[0-9]*|phtml|phar)(?:[./]|$)&quot; { return 404; }
+
+location = / {
+    try_files /index.html =404;
+    expires -1;
+    etag off;
+    if_modified_since off;
+}
+location ~ &quot;^/(?:index|catalog|[0-9]+)\.html$|^/(?:catalog|threads)\.json$|^/res/[0-9]+\.(?:html|json)$&quot; {
+    try_files $uri =404;
+    expires -1;
+    etag off;
+    if_modified_since off;
+}
+location ~* &quot;^/(?:js/[a-z0-9_+.-]+\.js|stylesheets/(?:[a-z0-9_+.-]+/)*[a-z0-9_+.-]+\.(?:css|png|gif|jpe?g|svg|ico|woff2?|ttf|eot))$&quot; {
+    try_files $uri =404;
+}
+location ~* &quot;^/(?:src|thumb)/[a-z0-9_-]+\.(?:jpe?g|png|gif|webp|ico|aac|flac|ogg|opus|mp3|mp4|wav|webm)$&quot; {
+    try_files $uri =404;
+}
+location ~ &quot;^/(?:favicon\.ico|(?:lock|sticky|swf_thumbnail|video_overlay)\.png)$&quot; {
+    try_files $uri =404;
+}
+location / { return 404; }
+</code></pre>
+<p>Retain the standard <code>mime.types</code> include in nginx&#39;s <code>http</code> block. Remove conflicting generic PHP handlers, broad static-file locations, aliases and cache rules from this site&#39;s block. The exact script locations deliberately avoid executing arbitrary <code>.php</code> files. <code>disable_symlinks</code> requires a platform with nginx&#39;s supported filesystem calls; it is a Linux/Unix hosting control, not a promise about the Windows development server. Check the <a href="https://nginx.org/en/docs/http/ngx_http_core_module.html#location">nginx location rules</a> and <a href="https://nginx.org/en/docs/http/ngx_http_fastcgi_module.html#fastcgi_param">FastCGI parameter documentation</a> when adapting this example.</p>
+<h3 id="apache-example" tabindex="-1">Apache example</h3>
+<p>Use the site&#39;s existing HTTPS <code>VirtualHost</code> configuration, <strong>not <code>.htaccess</code></strong>. This example needs <code>mod_rewrite</code>, <code>mod_headers</code>, <code>mod_mime</code>, <code>mod_dir</code>, <code>mod_proxy</code> and <code>mod_proxy_fcgi</code>, plus the site&#39;s TLS module/configuration. It assumes a dedicated virtual host without another global PHP handler or conflicting alias. Change the document root and private FastCGI endpoint for the host.</p>
+<pre><code class="language-apache">DocumentRoot &quot;/srv/adelia&quot;
+DirectoryIndex index.html
+ProxyRequests Off
+TraceEnable Off
+LimitRequestBody 3145728
+
+&lt;Directory &quot;/srv/adelia&quot;&gt;
+    AllowOverride None
+    Options -Indexes -Includes -ExecCGI -MultiViews -FollowSymLinks -SymLinksIfOwnerMatch
+    AcceptPathInfo Off
+    Require all granted
+    &lt;FilesMatch &quot;(?i)\.(?:php[0-9]*|phtml|phar)(?:\.|$)&quot;&gt;
+        Require all denied
+    &lt;/FilesMatch&gt;
+&lt;/Directory&gt;
+
+# Keep these rules at VirtualHost level, before other rewrites.
+RewriteEngine On
+RewriteCond %{REQUEST_URI} &quot;(^|/)\.&quot;
+RewriteRule ^ - [R=404,END]
+RewriteCond %{REQUEST_URI} &quot;!^/(?:imgboard\.php|inc/captcha\.php)$&quot;
+RewriteCond %{REQUEST_URI} &quot;\.(?:php[0-9]*|phtml|phar)(?:[./]|$)&quot; [NC]
+RewriteRule ^ - [R=404,END]
+
+# Every other path must be one of the explicitly public files below.
+RewriteCond %{REQUEST_URI} &quot;!^/(?:$|imgboard\.php|inc/captcha\.php)$&quot;
+RewriteCond %{REQUEST_URI} &quot;!^/(?:index|catalog|[0-9]+)\.html$&quot;
+RewriteCond %{REQUEST_URI} &quot;!^/(?:catalog|threads)\.json$&quot;
+RewriteCond %{REQUEST_URI} &quot;!^/res/[0-9]+\.(?:html|json)$&quot;
+RewriteCond %{REQUEST_URI} &quot;!^/js/[a-zA-Z0-9_+.-]+\.js$&quot;
+RewriteCond %{REQUEST_URI} &quot;!^/stylesheets/(?:[a-zA-Z0-9_+.-]+/)*[a-zA-Z0-9_+.-]+\.(?:css|png|gif|jpe?g|svg|ico|woff2?|ttf|eot)$&quot; [NC]
+RewriteCond %{REQUEST_URI} &quot;!^/(?:src|thumb)/[a-zA-Z0-9_-]+\.(?:jpe?g|png|gif|webp|ico|aac|flac|ogg|opus|mp3|mp4|wav|webm)$&quot; [NC]
+RewriteCond %{REQUEST_URI} &quot;!^/(?:favicon\.ico|(?:lock|sticky|swf_thumbnail|video_overlay)\.png)$&quot;
+RewriteRule ^ - [R=404,END]
+
+# Location sections merge after the file denial above: only these two can run.
+&lt;LocationMatch &quot;^/(?:imgboard\.php|inc/captcha\.php)$&quot;&gt;
+    Require all granted
+    SetHandler &quot;proxy:fcgi://127.0.0.1:9000&quot;
+&lt;/LocationMatch&gt;
+
+Header always set X-Content-Type-Options &quot;nosniff&quot;
+Header always set Referrer-Policy &quot;same-origin&quot;
+Header always set X-Frame-Options &quot;DENY&quot;
+Header always set Content-Security-Policy &quot;default-src &#39;self&#39;; script-src &#39;self&#39;; style-src &#39;self&#39; &#39;unsafe-inline&#39;; img-src &#39;self&#39; data:; font-src &#39;self&#39; data:; media-src &#39;self&#39;; connect-src &#39;self&#39;; frame-src https://www.youtube.com https://youtube.com https://www.youtube-nocookie.com https://youtube-nocookie.com https://player.vimeo.com https://w.soundcloud.com; object-src &#39;none&#39;; base-uri &#39;self&#39;; form-action &#39;self&#39;; frame-ancestors &#39;none&#39;&quot;
+&lt;FilesMatch &quot;\.(?:html|json)$&quot;&gt;
+    Header set Cache-Control &quot;no-cache&quot;
+    FileETag None
+    Header unset Last-Modified
+    RequestHeader unset If-Modified-Since
+    RequestHeader unset If-None-Match
+&lt;/FilesMatch&gt;
+</code></pre>
+<p>The public-path allowlist also blocks non-PHP private files; denying <code>.php</code> alone would expose SQLite/JSON stores and backups. Upload routes have no executable handler, and script-like double extensions are denied. Section merging matters: review Apache&#39;s <a href="https://httpd.apache.org/docs/2.4/sections.html">configuration-section order</a>, <a href="https://httpd.apache.org/docs/2.4/mod/mod_rewrite.html#rewriterule">rewrite rules</a>, <a href="https://httpd.apache.org/docs/2.4/mod/mod_authz_core.html#require">authorization rules</a> and <a href="https://httpd.apache.org/docs/2.4/mod/mod_proxy_fcgi.html">PHP/FastCGI handler examples</a> before combining this with existing host configuration. Shared hosting that does not permit equivalent controls needs the hosting administrator&#39;s help before deployment.</p>
+<h3 id="headers-and-deployment-checks" tabindex="-1">Headers and deployment checks</h3>
+<p>The examples&#39; Content Security Policy permits the supplied local JavaScript/styles and supported provider frames. Inline styles remain allowed for the current layout; inline scripts, plugins and framing the board are blocked. If you add an external logo, custom asset host or provider, adapt the specific source list and inspect the browser console. Start with <code>Content-Security-Policy-Report-Only</code> on a staging site if the hosting setup differs. No reporting endpoint is enabled by these examples.</p>
+<p>After HTTPS works everywhere, HSTS can be enabled with <code>Strict-Transport-Security: max-age=31536000</code>. Do not add <code>includeSubDomains</code> or request preload until every affected hostname is permanently ready for HTTPS. Keep the HTTP listener redirecting to HTTPS.</p>
+<p>Run <code>nginx -t</code> or <code>apachectl configtest</code> (<code>httpd -t</code> on Windows) before reloading. Then check the <strong>actual public origin and CDN</strong>, not just the local BAT server:</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Reference table"><table>
+<thead>
+<tr>
+<th>Probe</th>
+<th>Expected result</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/</code>, <code>/index.html</code>, <code>/catalog.html</code>, an existing <code>/res/1.html</code>, supplied CSS/JS and a valid uploaded image</td>
+<td>Public files load; unavailable/disabled exports return 404</td>
+</tr>
+<tr>
+<td><code>/imgboard.php?csrf</code> and management requests</td>
+<td>Dynamic responses have <code>Cache-Control: private, no-store</code>; session cookie is Secure, HttpOnly and SameSite=Lax over HTTPS</td>
+</tr>
+<tr>
+<td><code>/settings.php</code>, <code>/bootstrap.php</code>, <code>/app/Config.php</code>, <code>/bin/storage.php</code>, <code>/tests/run.php</code>, <code>/local-router.php</code>, <code>/README.html</code></td>
+<td>403 or 404, with no source/file content</td>
+</tr>
+<tr>
+<td><code>/.adelia.db</code>, its <code>-wal</code>/<code>-shm</code> sidecars, <code>/.adelia.json</code>, <code>.head</code>/<code>.journal</code>, <code>/adelia.lock</code>, dotfiles and backup/temp filenames</td>
+<td>403 or 404, including percent-encoded path variants</td>
+</tr>
+<tr>
+<td><code>/imgboard.php/extra</code>, <code>/inc/captcha.php/extra</code>, an unknown <code>.php</code>, or a script/double-extension file under <code>src</code>/<code>thumb</code></td>
+<td>403 or 404; no execution and no PHP source download</td>
+</tr>
+<tr>
+<td>Posting, replying, editing, replacing/deleting an image and deleting multiple posts</td>
+<td>Actions require the proper token/permissions; rebuilt pages show current content on the next request</td>
+</tr>
+<tr>
+<td>PHP-FPM temporarily unavailable on a private staging copy</td>
+<td>PHP routes fail with a gateway/service error; source is never served as text</td>
+</tr>
+</tbody></table></div>
+<p>Keep a private backup and test recovery separately. On 7 September 2026, the nginx rules above were syntax-checked and exercised with both storage backends, PHP FastCGI and a browser on Windows. Test copies used local paths/ports and HTTP; the Linux-only symlink directive was omitted. Private-file probes, all 35 theme files then bundled, uploads, moderation, cache/security headers and failure with PHP stopped passed. HTTPS certificates, Apache and Linux runtime behavior remain unverified here; validate the installed server and merged site configuration before publishing. Optional FFmpeg/ImageMagick/ExifTool processing and live third-party providers require separate integration tests.</p>
+<h2 id="privacy-and-security-boundaries" tabindex="-1">Privacy and security boundaries</h2>
+<p>Adelia has no ban system and does not read or store poster IP addresses or IP hashes. Posting cooldowns and duplicate-report checks use the browser session; clearing cookies resets those checks. Web-server, Cloudflare and hosting-provider logs are separate from the application.</p>
+<p>The September 2026 review fixed access to replies beneath hidden threads, unsafe moderation-log HTML, malformed deletion/upload input, incomplete multiple-post deletion, last-administrator lockout, stale disabled exports, remote destination validation and incorrect remote-thumbnail dimensions. Tests include rejected private/mixed DNS destinations and pinned transport settings. Provider responses are mocked for deterministic media tests; this does not certify live third-party services.</p>
+<p>The code uses prepared SQLite statements, validated JSON records, request normalization, session CSRF tokens, expiring one-use CAPTCHA when enabled, password hashing, escaped output, bounded remote downloads and controlled subprocess arguments. Static pages are replaced atomically per file. PHP warnings and deprecations are logged as exceptions.</p>
+<p>Keep settings, database files, password hashes, upload reservations, backups and temporary files private. The local router protects development requests; configure equivalent restrictions on the hosting web server. These controls and the regression tests reduce known risks; they are not a claim that every deployment or optional integration has been audited exhaustively.</p>
+<h2 id="development-and-verification" tabindex="-1">Development and verification</h2>
+<p>Every PHP file declares strict types. Application code uses the <code>Adelia</code> namespace, native parameter and return types, readonly configuration, property hooks and role enums. Current PHP 8.5 features include the pipe operator, native URI parsing, <code>array_first</code>, <code>#[NoDiscard]</code> and clone-with. Password arguments use <code>#[SensitiveParameter]</code>. New work should use the latest stable PHP appropriately, without older-version branches or polyfills.</p>
+<p>Entry points are <code>bootstrap.php</code>, <code>imgboard.php</code>, <code>inc/captcha.php</code> and <code>local-router.php</code>. Logic lives in <code>app</code>; maintenance commands live in <code>bin</code>. There is no Composer, Twig, jQuery, translation package, reCAPTCHA, ban subsystem or server-database backend.</p>
+<p>Run the fixture-based regression suites from the board directory. They use <code>tests/fixtures/config.php</code>, a test-only configuration independent of private <code>settings.php</code>:</p>
+<pre><code class="language-powershell">C:\php\php.exe tests/run.php sqlite
+C:\php\php.exe tests/run.php flatfile
+C:\php\php.exe tests/storage.php
+C:\php\php.exe tests/durability.php
+C:\php\php.exe tests/accounts.php
+C:\php\php.exe tests/security.php
+C:\php\php.exe tests/remote-media.php
+</code></pre>
+<p>The suites cover both backends, storage conversion and query parity, concurrent writers, corrupted files, injected write/flush/publication failures, process termination at commit boundaries, moderation failures, credentials, tripcodes and input validation. Earlier application verification also exercised browser forms and isolated nginx workflows. GD uploads and thumbnails were exercised; optional remote providers, video processing, ImageMagick, FFmpeg and ExifTool need separate end-to-end validation.</p>
+<p><code>phpstan.neon</code> configures PHPStan level 5; <code>.php-cs-fixer.dist.php</code> configures PHP-FIG PER style and PHP 8.5 migration rules. These are development tools, not runtime dependencies. Re-run relevant checks after code changes; a past pass is not proof that later edits work.</p>
+<p>Future AI contributors should read <a href="#ai-reference">AGENTS.md</a>. Keep this README and its HTML edition synchronized when behavior changes. A documentation-only edit needs content, link and layout checks, not a destructive test against a live board.</p>
+<h2 id="credits-and-licenses" tabindex="-1">Credits and licenses</h2>
+<p>Adelia is a fork of TinyIB with third-party themes and assets. Preserve the original copyright and license notices in <a href="#license-tinyib">LICENSE</a>, <a href="#license-themes">LICENSE.Themes.md</a> and <a href="#license-tinyboard">LICENSE.Tinyboard.md</a>, together with the existing attribution. The application name and PHP namespace are Adelia; its entry point remains <code>imgboard.php</code>.</p>
+
+<section class="appendix" aria-labelledby="storage-reference"><p class="appendix-label">Reference / 01</p><h2 id="storage-reference" tabindex="-1">Storage and recovery</h2><p class="source">Complete reference from STORAGE.md, included for offline use.</p><details open><summary>Read the storage reference</summary><div class="reference-content"><h2 id="storage-adelia-storage-and-recovery" tabindex="-1">Adelia storage and recovery</h2>
+<p>Adelia supports SQLite 3 and a transactional JSON flat-file store. Both use the same posting, moderation and maintenance workflow. PHP 8.5 and a local filesystem with working locks are required. Use one board installation on one server; do not put the live store on a network share or in a folder synchronized by a cloud-drive client.</p>
+<h3 id="storage-create-or-convert" tabindex="-1">Create or convert</h3>
+<p>For a new empty flat-file board, set these values in <code>settings.php</code>:</p>
+<pre><code class="language-php">&#39;dbdriver&#39; =&gt; &#39;flatfile&#39;,
+&#39;dbpath&#39; =&gt; &#39;.adelia.json&#39;,
+</code></pre>
+<p>Then run:</p>
+<pre><code class="language-powershell">C:\php\php.exe bin/storage.php init
+C:\php\php.exe imgboard.php
+</code></pre>
+<p>Flat-file initialization is explicit. A missing flat-file database never means permission to silently create an empty board. SQLite creates its schema automatically. <code>init</code> refuses an existing store or a partially initialized bundle. It requires the parent directory to exist.</p>
+<p>To convert an existing SQLite board, stop the server, back up the board folder, and run:</p>
+<pre><code class="language-powershell">C:\php\php.exe bin/convert-storage.php flatfile .adelia.json
+</code></pre>
+<p>The converter copies all current records and ID counters into a new destination, verifies equality, and leaves the source, settings and uploaded media unchanged. It refuses an existing destination. After successful conversion, change <code>dbdriver</code> and <code>dbpath</code> to the values above, run <code>php bin/maintenance.php</code>, and restart. Keep your tripseed and credentials. If the chosen destination exists, select another hidden filename; do not overwrite it.</p>
+<p>To convert back, use <code>php bin/convert-storage.php sqlite .adelia-converted.db</code>, then select that file in settings while stopped. Never switch back to an old database after accepting new posts without first converting the current data.</p>
+<p>For the previous Adelia version 1 JSON store, back up the board while stopped, select its existing path, then run <code>php bin/storage.php upgrade</code>. This explicit upgrade preserves the old JSON in a private <code>.legacy</code> file and creates the new commit files. It does not read original TinyIB serialized/TSV storage.</p>
+<h3 id="storage-files-to-preserve" tabindex="-1">Files to preserve</h3>
+<p>With <code>dbpath</code> set to <code>.adelia.json</code>, the database is a bundle:</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Reference table"><table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>.adelia.json</code></td>
+<td>Complete checked snapshot of all records</td>
+</tr>
+<tr>
+<td><code>.adelia.json.journal</code></td>
+<td>Complete prepared or committed snapshot used for recovery</td>
+</tr>
+<tr>
+<td><code>.adelia.json.head</code></td>
+<td>Authoritative store identity, revision and SHA-256 commit checksum</td>
+</tr>
+<tr>
+<td><code>.adelia.json.lock</code></td>
+<td>Stable lock used by readers and writers</td>
+</tr>
+<tr>
+<td><code>adelia.lock</code></td>
+<td>Board lock coordinating posting, moderation, conversion and maintenance</td>
+</tr>
+<tr>
+<td><code>.adelia-uploads.json</code></td>
+<td>Checked list of reserved uploads awaiting commit or cleanup</td>
+</tr>
+</tbody></table></div>
+<p>The three data/commit files must remain together. A journal is recovery data, <strong>not a historical backup</strong>. Normal commits replace both snapshots with current data; Adelia does not intentionally retain a history of deleted posts. A failed checkpoint can leave an older main snapshot until the next successful repair/write. Private backups can also contain deleted material.</p>
+<p>Images and videos remain in <code>src</code>, thumbnails in <code>thumb</code>. Public HTML and JSON under the board root and <code>res</code> are generated from committed records. Settings contain secrets, and database records contain password hashes and moderator logs. Never publish storage, settings, backups or temporary files. The local development router blocks hidden files and private application directories. A hosted website needs equivalent access rules in its own Apache or nginx configuration; the development router is not applied automatically.</p>
+<h3 id="storage-what-a-commit-does" tabindex="-1">What a commit does</h3>
+<ol>
+<li>Acquire the board lock and complete earlier pending maintenance. Begin an exclusive record transaction and read the current committed revision.</li>
+<li>Validate the request and collect its record changes in memory. Posts, reports, moderator logs, thread state and cleanup jobs commit together. New upload names are recorded before the files are created. New referenced media are checked and flushed before records can commit.</li>
+<li>Validate the complete JSON snapshot. Write and flush a new journal to a temporary file in the same directory, then atomically replace the journal.</li>
+<li>Write, flush and atomically replace the commit record. This is the commit point.</li>
+<li>Replace the main snapshot. If this step fails, the matching journal still contains the committed result. The next write repairs the main copy before replacing the journal again.</li>
+<li>Rebuild public pages using atomic file replacements, then remove only media no committed post references. Finally remove completed maintenance jobs in another transaction.</li>
+</ol>
+<p>Recovery accepts only a snapshot matching the authoritative commit record, including its checksum. It never guesses by choosing the largest revision or silently falling back to older content. A failure before the commit point leaves the previous transaction intact. A failure after it leaves the complete new transaction recoverable. If confirmation fails after the commit record was published, an uncertain-acknowledgement error requires checking the saved result before resubmitting.</p>
+<p>Generated pages and media are separate filesystem objects. Their changes cannot be one atomic filesystem operation. After an interruption, some static pages can be stale until the next dynamic request or maintenance command finishes the durable jobs. Images are retained until page rebuilding succeeds. If a change was committed but maintenance fails, the response says it was saved and needs maintenance; do not submit it again blindly. Reserved uploads without committed references are removed during recovery.</p>
+<p>Readers cache a validated snapshot and build indexes for common post/thread/account lookups. A small commit-record check detects another writer&#39;s changes. Writes reload current committed state under a lock; unchanged updates do not create a new revision. IDs increase monotonically and committed deleted IDs are not reused. Locks time out with an error rather than proceeding without a lock.</p>
+<h3 id="storage-check-repair-and-back-up" tabindex="-1">Check, repair and back up</h3>
+<p>Run these from the board directory:</p>
+<pre><code class="language-powershell">C:\php\php.exe bin/storage.php check
+C:\php\php.exe bin/storage.php repair
+C:\php\php.exe bin/maintenance.php
+</code></pre>
+<p><code>check</code> validates committed record structure and integrity; it is not an exhaustive audit of existing image contents. <code>repair</code> restores a damaged/missing main snapshot from the exact matching committed journal. Neither command invents a missing commit record or recovers unrelated damaged copies. <code>maintenance.php</code> rebuilds all public pages and retries pending media cleanup. Pending jobs also run at the start and end of dynamic board requests.</p>
+<p>For a complete backup, stop PHP/nginx from serving this board, run maintenance successfully, then copy the <strong>whole board folder</strong>, including hidden files, settings, media and the entire database bundle, to a private location outside the web root. If storage is outside the board folder, copy its bundle too. Restart only after copying completes. Keep separate dated backups; test a restore in a separate folder. The conversion command can create a checked record-only copy at a new private destination, but that copy does not include uploaded media or settings.</p>
+<p>If a commit record or both matching snapshots are damaged, stop writes, preserve all existing files, and restore a known complete backup into a separate directory. Verify it with <code>check</code>, run maintenance, and only then select the restored board. Do not mix <code>.head</code>/<code>.journal</code>/<code>.json</code> files from different backups. Do not hand-edit JSON, delete locks, or remove individual bundle files while running. Hidden <code>.adelia-write-*.tmp</code> files left by a killed process are never selected as data; they can be removed after all board processes are stopped and the committed bundle has been verified.</p>
+<h3 id="storage-scope-and-limits" tabindex="-1">Scope and limits</h3>
+<p>The record payload is limited to 16 MiB, excluding uploaded media. JSON envelopes add escaping overhead; allow disk space for both snapshots, temporary replacements, public-page generation and backups. A mutation rewrites the complete snapshot. The app groups related writes into transactions and avoids redundant work, but SQLite remains preferable when records or concurrent activity grow.</p>
+<p>Successful file writes are explicitly flushed. On Unix, file publication and media deletion also synchronize their directories. PHP on Windows does not expose the directory-handle flushing needed for the same directory-sync step. Filesystem, operating-system and storage-device behavior therefore remain part of durability, especially for actual power loss. Checksums detect accidental corruption; they do not authenticate data against an attacker who can rewrite the whole bundle. Restrict filesystem access and keep backups.</p>
+<p>The automated durability suite injects short/zero writes, failed flushes and replacements, corrupt/missing files, and cleanup failures. It also terminates actual PHP worker processes at each publication boundary and reopens storage. These are process-failure tests on the installed Windows/PHP runtime, not physical power-cut tests or a proof against every hardware failure.</p>
+<pre><code class="language-powershell">C:\php\php.exe tests/run.php sqlite
+C:\php\php.exe tests/run.php flatfile
+C:\php\php.exe tests/storage.php
+C:\php\php.exe tests/durability.php
+</code></pre>
+</div></details></section>
+<section class="appendix" aria-labelledby="theme-reference"><p class="appendix-label">Reference / 02</p><h2 id="theme-reference" tabindex="-1">Themes and presentation</h2><p class="source">Complete reference from THEMES.md.</p><details open><summary>Read the theme reference</summary><div class="reference-content"><h2 id="theme-themes-for-adelia" tabindex="-1">Themes for Adelia</h2>
+<p>Use the <strong>Style</strong> menu at the top of the board, a thread, the catalog or the management area. The eight choices are <strong>Yotsuba, Yotsuba B (original), Dark, Futaba Light, Jungle, Miku, Rugby and Sharp</strong>. The browser remembers your selection. <strong>Yotsuba B</strong> is also the shared base stylesheet used by the other themes.</p>
+<p>Start the app with the existing <strong>Start Adelia.bat</strong>. If you had the board open during the update, refresh it once. The launcher still works from the folder containing Adelia.</p>
+<h3 id="theme-default-and-customization" tabindex="-1">Default and customization</h3>
+<p><code>defaultstyle</code> in <code>settings.php</code> is <code>futaba-light</code>, the default for new visitors. Available filenames without <code>.css</code> are <code>yotsuba</code>, <code>style</code> (Yotsuba B), <code>dark</code>, <code>futaba-light</code>, <code>jungle</code>, <code>miku</code>, <code>rugby</code> and <code>sharp</code>. An unavailable configured default falls back to <code>style</code>; an unavailable saved browser choice leaves the configured default selected.</p>
+<p>Themes are discovered from <code>stylesheets/*.css</code>. The older <code>stylesheets</code> configuration array is retained for configuration compatibility but no longer controls the menu. Do not include <code>style.css</code> again inside a new theme: the base file is always loaded first. Keep each theme&#39;s supporting files under <code>stylesheets/</code>.</p>
+<p>Layout adjustments belong in <code>stylesheets/shared/adelia.css</code>, loaded after the theme. All application CSS now lives under <code>stylesheets/</code>; there is no separate <code>css/</code> directory. The eight theme CSS files stay at the top level, their 11 images are under <code>img/</code>, and the shared layout file is <code>shared/adelia.css</code>. The shared layout is not a selectable theme. Unused fonts, jQuery UI, old moderation/player styles and other theme assets were removed. Sharp&#39;s unused reference to a missing legacy logo background was removed too. After changing a PHP template or the theme menu, use <strong>Manage → Rebuild All</strong> to regenerate the static pages. Browser preferences override the default until changed in the Style menu.</p>
+<h3 id="theme-compatibility" tabindex="-1">Compatibility</h3>
+<p>Posts use <code>div.post.op</code> and <code>div.post.reply</code>, with <code>intro</code>, <code>subject</code>, <code>name</code>, <code>trip</code>, <code>quote</code>, <code>fileinfo</code>, <code>post-image</code> and <code>body</code> classes. Catalog cards use <code>theme-catalog</code>, <code>threads</code> and <code>thread</code>. Adelia&#39;s form fields and JavaScript hooks are retained. Stored posts receive class aliases during rendering without altering their database contents.</p>
+<p>The PHP development router serves theme images and web fonts while blocking private application files. Configure the hosting web server to serve these public assets and protect configuration, databases and application code. The retained themes use local assets; every remaining CSS image reference resolves to a bundled file.</p>
+<p>The original theme licenses are in <code>LICENSE.Themes.md</code> and <code>LICENSE.Tinyboard.md</code>. Their attribution is included in the page footer. TinyIB&#39;s own license is unchanged.</p>
+<p>This update changes presentation. Existing posting options, moderation rules, accounts and data storage remain governed by Adelia&#39;s configuration and backend.</p>
+<h3 id="theme-native-javascript" tabindex="-1">Native JavaScript</h3>
+<p>The interactive frontend uses native JavaScript modules and browser APIs. jQuery and its scrolling plugin have been removed. The selected themes and visible post/form/catalog markup are retained.</p>
+<p>Image/GIF expansion, MP4/WebM playback, quote previews, live reply refresh, backlinks, CAPTCHA refresh, style preferences and deletion passwords work without a JavaScript library. Quote previews also support keyboard focus and Escape. Inactive pages show an unread count in the tab title instead of blinking it.</p>
+<p>Fetched post markup is parsed in a detached, inert template and reconstructed with allowed elements, attributes and URLs before insertion. Previews omit duplicate IDs and form controls. Expanded media uses newly created DOM elements; standard YouTube, Vimeo and SoundCloud iframes use restricted attributes and a sandbox. Arbitrary scripts from an embed provider are not executed. Server-side validation and escaping remain necessary.</p>
+<p>Use a browser with JavaScript module support. The local launcher serves the modules directly, and a hosting web server can serve them as static JavaScript; no Node.js, npm, build step, CDN or frontend package installation is required. After upgrading, use Manage → Rebuild All to refresh all generated pages, including existing threads.</p>
+</div></details></section>
+<section class="appendix" aria-labelledby="ai-reference"><p class="appendix-label">Reference / 03</p><h2 id="ai-reference" tabindex="-1">AI contributor guidance</h2><p class="source">Canonical instructions from AGENTS.md. The requested agent.md points to this file.</p><details open><summary>Read the AI guidance</summary><div class="reference-content"><h2 id="ai-guidance-for-ai-contributors-to-adelia" tabindex="-1">Guidance for AI contributors to Adelia</h2>
+<p>This file applies to the whole Adelia project. Read the code and current configuration before changing behavior. README.md is the user guide; README.html is its offline HTML edition. STORAGE.md explains the persistence protocol, and THEMES.md explains the presentation layer.</p>
+<h3 id="ai-project-direction" tabindex="-1">Project direction</h3>
+<p>Adelia is deliberately a lightweight imageboard for modest traffic. Preserve its current appearance on phones and computers, straightforward posting and replies, attachments, catalog, and management area. Prefer small, understandable components and native APIs over new frameworks or services.</p>
+<ul>
+<li><strong>Use the latest stable PHP version and current patch release.</strong> Verify it at <a href="https://www.php.net/downloads.php">https://www.php.net/downloads.php</a> before PHP modernization work; do not assume the version written here remains current. PHP 8.5.10 on a 64-bit runtime was verified on 7 September 2026. The current bootstrap minimum is PHP 8.5, not a permanent development target. Do not target preview releases unless the user requests one.</li>
+<li><strong>Backward compatibility with older PHP versions is not required.</strong> Use modern PHP syntax, strict types, native types and suitable current language features. Do not add older-version branches, compatibility shims, polyfills or legacy database APIs. Update runtime checks, development configuration and documentation together when the required version changes. New syntax should improve the code, not merely make it look different.</li>
+<li><strong>SQLite 3 and flat-file are the only storage backends.</strong> Their configuration names are <code>sqlite</code> and <code>flatfile</code>. Do not reintroduce MySQL, MariaDB, PostgreSQL or another database backend. Flat-file must work without a database extension; SQLite uses PDO/pdo_sqlite.</li>
+<li>Keep runtime operation free of Composer, Twig and jQuery. Use native JavaScript modules and local assets. Development checks may use separate tools; they must not become installation requirements for running the board.</li>
+<li>Keep bans and poster-IP collection out of the app. Do not add IP hashes, proxy-header tracking or a replacement fingerprinting system. Hosting/server logs are outside this application&#39;s storage model.</li>
+</ul>
+<h3 id="ai-flat-file-quality-is-a-central-goal" tabindex="-1">Flat-file quality is a central goal</h3>
+<p><strong>The flat-file system is attempting to be the best it can be</strong> for this small-board use case: reliable, consistent, recoverable, secure, understandable and efficient. Treat that as a continuing engineering goal, not a claim of perfection or proof that it is better than every other store.</p>
+<p>Flat-file is a supported backend for the full application. Posting, replies, reports, accounts, moderator edits and deletions, pinning, locking, attachment replacement, conversion and maintenance must remain consistent with SQLite. Do not turn it into a reduced-feature demo or bypass the shared typed storage interface.</p>
+<p>Before persistence changes, read STORAGE.md and the actual implementation. Preserve these invariants:</p>
+<ol>
+<li>Use stable locks and reload committed state under the writer lock. Related records, ID counters and durable maintenance jobs belong in one transaction. Committed deleted IDs must not be reused; no-op changes should avoid unnecessary revisions.</li>
+<li>The <code>.head</code> commit record is authoritative. Accept only a snapshot with the matching store identity, revision and checksum. Never select data merely because it has the highest revision, silently roll back to an older snapshot, or recreate missing established storage as an empty board. Initialization and legacy-format upgrades are explicit operations.</li>
+<li>Check writes, including partial writes; flush files before publication. Preserve same-directory atomic replacement and directory synchronization where the platform supports it. Keep the committed snapshot recoverable before replacing its journal. Do not weaken uncertain-commit reporting.</li>
+<li>Reserve upload names before creating files, validate and flush referenced media before committing records, and remove only media that committed records no longer reference. Rebuild public pages before deleting old attachments. Durable jobs must make interrupted rebuilding and cleanup retryable.</li>
+<li>Validate complete record structures and enforce size bounds. Keep the 16 MiB record-payload limit and single-host/local-filesystem scope documented unless a tested redesign changes them. Media are outside that payload limit. Avoid live databases on network shares or cloud-synchronized folders.</li>
+<li>Preserve fail-closed corruption handling and exact recovery checks. Journals and current recovery copies are not historical backups. Protect the entire bundle, settings, upload ledger, password hashes and backups from public access.</li>
+</ol>
+<p>Measure changes and use failure-injection/concurrency tests where relevant. Continue to document Windows directory-sync and real power-loss limits honestly. Do not advertise complete hardware durability on the strength of process-kill tests. SQLite remains the appropriate option when whole-snapshot rewrites or board activity exceed flat-file&#39;s practical scope.</p>
+<h3 id="ai-preserve-user-data-and-identity" tabindex="-1">Preserve user data and identity</h3>
+<p>No requirement for old-PHP compatibility does <strong>not</strong> authorize data loss. Preserve existing records, media, account hashes, counters and settings. An intentional storage-format change needs an explicit, verified migration and a private backup, with clear failure behavior. Never silently discard fields or overwrite a destination store.</p>
+<p>The initial <code>admin</code> / <code>password</code> account is bootstrapped only when the accounts table is empty and must require a password change before management. Credentials belong in storage as PHP password hashes, not as permanent configuration overrides. Do not reset an existing account as part of an ordinary code or documentation update. Preserve current-password verification, role checks and session invalidation after a successful credential commit.</p>
+<p>Keep <code>tripseed</code> private and stable. Preserve saved tripcodes and established identity behavior. <code>Name##secret</code> uses the longer, domain-separated HMAC-SHA-256 secure mode; do not downgrade it or persist its raw secret. The single-hash/exclamation forms have existing keyed identities. An intentional identity-format change must be documented rather than silently altering users&#39; future identities.</p>
+<h3 id="ai-security-and-presentation" tabindex="-1">Security and presentation</h3>
+<p>Keep request validation, output escaping, CSRF protection, authorization checks and stale-editor conflict checks at their existing boundaries. Maintain prepared SQLite statements, bounded uploads/downloads and controlled subprocess arguments. Staff content must not bypass HTML escaping. Keep executable content out of uploads and private application/storage paths out of public routing.</p>
+<p>Retain the current theme-compatible markup and the user-selected themes (Yotsuba, Yotsuba B, Dark, Futaba Light, Jungle, Miku, Rugby and Sharp) for posting, replies, the catalog and management. Do not restore removed themes or their unused assets without a user request. Keep the shared style.css and assets referenced by retained themes. Shared layout CSS belongs under stylesheets/shared so it does not appear in the top-level theme selector. Use neutral filenames and implementation comments while preserving required license and footer notices. Use stylesheets/shared/adelia.css for layout integration. Test affected screens at phone and desktop widths. Preserve the original copyright/license files and existing attribution when changing branding or assets.</p>
+<h3 id="ai-verification-and-documentation" tabindex="-1">Verification and documentation</h3>
+<p>The sole application configuration file is settings.php. The public repository tracks a documented installation copy with blank private keys; preserve that distinction from a configured deployment. Never commit populated tripseed/managekey values, generated pages or board data. A Git ignore rule does not protect a file that is already tracked. Maintain its per-option comments when behavior changes; edit it directly and preserve saved values/secrets. Do not add a second application settings template. Test suites use their independent tests/fixtures/config.php and must never load private live settings as a fixture.</p>
+<p>Work on isolated fixtures for tests. Never use a live board as disposable test data or publish its settings, database, backups, credentials or tripcode key. Repository changes should contain code and documentation, not generated board content or private state.</p>
+<p>Run the checks appropriate to the change. Shared storage or posting changes should exercise both drivers; persistence changes need the storage and durability suites; authentication or tripcode changes need the accounts suite. The commands below assume PHP is on PATH; on the current Desktop, use C:\php\php.exe otherwise.</p>
+<pre><code class="language-text">php tests/run.php sqlite
+php tests/run.php flatfile
+php tests/storage.php
+php tests/durability.php
+php tests/accounts.php
+php tests/security.php
+php tests/remote-media.php
+</code></pre>
+<p>Run the security suite for request, authorization or output-boundary changes, and the deterministic remote-media suite for download/thumbnail changes. Keep hosting examples in the README synchronized with public routes, asset needs and response headers; never assume the development router protects Apache or nginx.</p>
+<p>Use PHP syntax checks and the existing PHPStan/PHP-CS-Fixer configuration for relevant code edits. Verify browser behavior when changing forms, sessions, previews, styles or moderation. Report actual checks and limitations; do not equate a passing suite with a complete security proof.</p>
+<p>Keep README.md and README.html in sync. The HTML edition also embeds STORAGE.md, THEMES.md, this guidance and the license texts for offline reading; refresh those sections when their sources change. Preserve the HTML&#39;s source-hash manifest so a mismatch can be detected. Check internal links, desktop/mobile layout and offline operation. Documentation-only changes need those checks, not another full application test run.</p>
+<p>AGENTS.md is the canonical AI guidance. Keep agent.md as a short pointer to it so the two files cannot acquire conflicting instructions. Preserve this project&#39;s direction while following the user&#39;s authorized task and any higher-priority instructions.</p>
+</div></details></section>
+<section class="appendix" aria-labelledby="licenses"><p class="appendix-label">Reference / 04</p><h2 id="licenses" tabindex="-1">License texts</h2><p class="source">Original notices, included without alteration.</p><details open><summary>Read the licenses</summary><section class="license"><h3 id="license-tinyib" tabindex="-1">TinyIB · MIT</h3><p class="source">Source: LICENSE</p><pre class="license-text">MIT License
+
+Copyright (c) 2023 Trevor Slocum &lt;trevor@rocket9labs.com&gt;
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the &quot;Software&quot;), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+</pre></section>
+<section class="license"><h3 id="license-themes" tabindex="-1">Theme license</h3><p class="source">Source: LICENSE.Themes.md</p><pre class="license-text"># License of vichan
+Copyright (c) 2012-2018 vichan-devel
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the &quot;Software&quot;), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+All copyright notices and permission notices (including this file) shall be
+included and remain unedited in all copies or substantial portions of the
+Software. This explicitly includes but is not limited to the vichan copyright
+notices found in the footers of some template files.
+
+THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+# License of Tinyboard
+This code is licensed under BOTH a vichan license and a Tinyboard license.
+You must agree to both (not either) licensing terms in order to use this
+software. The original Tinyboard license can be found in a LICENSE.Tinyboard.md
+file, it is included below for your convenience:
+
+Copyright (c) 2010-2014 Tinyboard Development Group (tinyboard.org)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the &quot;Software&quot;), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+All copyright notices and permission notices (including this file) shall be
+included and remain unedited in all copies or substantial portions of the
+Software. This explicitly includes but is not limited to the Tinyboard copyright
+notices found in the footers of some template files.
+                
+THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+# Brief
+This section is not a law code, it just describes the license in a
+human-friendly way.
+
+Both licenses are slight modifications of the MIT/X11 license. This is a
+permissive license, you can do anything with code, but you just have to leave
+copyright notices untouched. Beside, we give you absolutely no guarantees.
+
+Tinyboard and vichan licenses also clarify, that the copyright notices found
+in the template footers are also covered by the copyright notice preservation
+clause.
+</pre></section>
+<section class="license"><h3 id="license-tinyboard" tabindex="-1">Tinyboard</h3><p class="source">Source: LICENSE.Tinyboard.md</p><pre class="license-text"># License
+Copyright (c) 2010-2014 Tinyboard Development Group (tinyboard.org)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the &quot;Software&quot;), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+All copyright notices and permission notices (including this file) shall be
+included and remain unedited in all copies or substantial portions of the
+Software. This explicitly includes but is not limited to the Tinyboard copyright
+notices found in the footers of some template files.
+
+THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+</pre></section></details></section>
+</article>
+<footer class="footer"><span>Adelia documentation · Verified 7 September 2026<br>Generated from the Markdown sources. Source hashes are embedded below.</span><a href="#adelia">Back to top ↑</a></footer>
+</main></div>
+<script type="application/json" id="documentation-sources">{
+  "README.md": "98a12ab99c017f39f8ef7c5f0d2367e7b6cd59e856890df804921f1588c1a6d4",
+  "STORAGE.md": "5e773758a0bc23536c0cbdf8c9c2406fc59d6e334a6d3da29e2304168c38974e",
+  "THEMES.md": "ca84b85059a6e178dbb15c296e30f0b4defb507259cdd18c96a27784d10ee049",
+  "AGENTS.md": "d300da1d9a0ea7f660cec090161aa5ce78a50f0adce73444a2dc5e9cade5ff90",
+  "agent.md": "1353c7fb308a1a1d999c24da23d8f94e4a62c624868a47d900314db5644eb053",
+  "LICENSE": "c38e6159c797da2bd7bda9ddd1a4fec52fb7a2a0f012b7f6ee47cd11d11734d0",
+  "LICENSE.Themes.md": "2f794193abc48a0bc3fc5675a4c29efaf5b203e672564ab1f2b1a20fd9d41c45",
+  "LICENSE.Tinyboard.md": "1ea7dfc7cf961620a0e665f7db27c4cf1d6cf3b27b5950a683112205e85c4a71"
+}</script>
+<script>
+const contents = document.getElementById('contents');
+if (matchMedia('(max-width: 700px)').matches) contents.open = false;
+function revealTarget() {
+  const target = document.getElementById(location.hash.slice(1));
+  if (!target) return;
+  for (let parent = target.parentElement; parent; parent = parent.parentElement) {
+    if (parent instanceof HTMLDetailsElement) parent.open = true;
+  }
+}
+addEventListener('hashchange', revealTarget);
+revealTarget();
+let printDetails = [];
+addEventListener('beforeprint', () => {
+  printDetails = [...document.querySelectorAll('.appendix details')].map(element => [element, element.open]);
+  for (const [element] of printDetails) element.open = true;
+});
+addEventListener('afterprint', () => { for (const [element, open] of printDetails) element.open = open; });
+</script>
+</body>
+</html>

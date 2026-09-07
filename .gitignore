@@ -1,0 +1,50 @@
+# settings.php is a tracked, blank-secret installation config. Never commit a populated key.
+*.html
+# Keep the offline user guide; generated board pages remain ignored.
+!README.html
+*.db
+.accounts*
+.bans*
+.keywords*
+.logs*
+.posts*
+.reports*
+.project
+.settings/
+.idea/
+*error_log
+*.db-wal
+*.db-shm
+*.db-journal
+adelia.lock
+vendor/
+.php-cs-fixer.cache
+
+# Private JSON storage, persistent locks and incomplete atomic writes
+.*.json
+.*.json.*
+.adelia-write-*.tmp
+res/.adelia-write-*.tmp
+src/.adelia-write-*.tmp
+thumb/.adelia-write-*.tmp
+
+# Public board output is generated from private storage, not shipped as source.
+/catalog.json
+/threads.json
+/src/*
+!/src/.gitignore
+/thumb/*
+!/thumb/.gitignore
+/res/*
+!/res/.gitignore
+
+# Local deployment data, backups and tooling output
+/backups/
+/outputs/
+/work/
+*.sqlite
+*.sqlite3
+*.bak
+*.log
+.env
+.env.*
